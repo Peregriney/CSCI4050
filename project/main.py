@@ -5,6 +5,9 @@ import re
 
 app = Flask(__name__)
 
+#initiialize output msg
+msg = ''
+
 #Create secret key
 app.secret_key = 'key'
 
@@ -39,8 +42,14 @@ cursor.execute('SELECT * FROM Users WHERE Email = %s AND Password = %s', (inputE
 account = cursor.fetchone()
 
 #If account exists create session
-#if account:
- #   return 'Logged in successfully.'
-#else:
- #   msg = 'Incorrect email/password.'
+if account:
+    session['loggedin'] = True
+    session['id'] = account['id']
+    session['username'] = account['username']
+
+    #go back to home
+    return 'Logged in successfully.'
+else:
+    msg = 'Incorrect email/password.'
   #  return msg
+return render_template('home.html', msg=msg)
